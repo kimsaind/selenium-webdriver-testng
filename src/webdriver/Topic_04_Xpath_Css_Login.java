@@ -7,8 +7,9 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -20,7 +21,7 @@ public class Topic_04_Xpath_Css_Login {
 	WebDriver driver;
 	String projectPath = System.getProperty("user.dir");
 	
-	//Get Elemtn
+	//Get Element
 	By myaccountBtn= By.xpath("//div[@class='footer-container']//a[@title='My Account']");	
 	By emailTxt = By.xpath("//*[@id='email']");	 
 	By pwloginTxt = By.xpath("//*[@id='pass']"); 	
@@ -32,16 +33,14 @@ public class Topic_04_Xpath_Css_Login {
 	By firstnameTxt = By.xpath("//*[@id='firstname']");	
 	By lastnameTxt= By.xpath("//*[@id='lastname']");	
 	By registerBtn = By.xpath("//div[@class='buttons-set']/button[@title='Register']");
-	By logoutBtn = By.xpath("//div[@id='header-account']//a[@title='Log Out']");
-	
-	//Error mess
+    // Error mess
 	
 	By errorMessageEmail = By.xpath("//*[@id='advice-required-entry-email']");
 	By errorMessagePW = By.xpath("//*[@id='advice-required-entry-pass']");
 	By errorMessSecusses = By.xpath("//li[@class='success-msg']");
 	By errorHello= By.xpath("//div[@class='welcome-msg']/p[@class='hello']");
 	By errorDashboard = By.xpath("//div[@class='dashboard']/div[@class='page-title']");
-	By errorLogout = By.xpath("//div[@class='header-language-container']/p[@class='welcome-msg']");
+	By errorLogout = By.linkText("//div[@class='header-language-container']/p[@class='welcome-msg']");
 	
 	//Function random
 	public int randomNumber() {
@@ -66,8 +65,6 @@ public class Topic_04_Xpath_Css_Login {
 	  
 	  //Random email 
 	  email = "pika" + randomNumber() + "@gmail.com";
-	  
-	  
 	  
   }
   
@@ -106,9 +103,7 @@ public class Topic_04_Xpath_Css_Login {
 	  
 	  //Error email
 	  Assert.assertEquals(driver.findElement(By.xpath("//div[@id='advice-validate-email-email']")).getText(),"Please enter a valid email address. For example johndoe@domain.com."); 
-		  
-	  
-	 
+		 
   }
   
   //@Test
@@ -155,7 +150,7 @@ public class Topic_04_Xpath_Css_Login {
 	   
   }
   
- //@Test
+ @Test
  public void TC_05_Create_New_Account() {
 	  
 	  driver.navigate().refresh();
@@ -189,14 +184,16 @@ public class Topic_04_Xpath_Css_Login {
 	 // Assert.assertTrue(driver.findElement(errorHello).isDisplayed());
 	 // Assert.assertTrue(driver.findElement(errorDashboard).isDisplayed());
 
-	
-	  //Click logout not locator
-	  driver.findElement(logoutBtn).click();
-	  Assert.assertTrue(driver.findElement(errorLogout).isDisplayed());
+	  //Click logout 
+	  WebElement logout = driver.findElement(By.xpath("//a[contains(text(),'Log Out')]"));
+	  JavascriptExecutor je = (JavascriptExecutor) driver;  
+	  je.executeScript("arguments[0].click();",logout);
+	  
+	  //Assert.assertTrue(driver.findElement(errorLogout).isDisplayed());
 	   
   }
   
- @Test
+ //@Test
  public void TC_06_Login_with_Email_PW() {
 	  
 	  driver.navigate().refresh();
@@ -215,8 +212,6 @@ public class Topic_04_Xpath_Css_Login {
 	  
 	  Assert.assertTrue(driver.findElement(errorHello).isDisplayed());
 	  
-	
-	 
  }
  
   @AfterClass

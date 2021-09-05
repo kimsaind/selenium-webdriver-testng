@@ -13,10 +13,8 @@ import org.testng.annotations.AfterClass;
 
 public class Topic_04_Xpath_Css_Register {
 	
-
 	WebDriver driver;
 	String projectPath = System.getProperty("user.dir");
-	
   
   @BeforeClass
   public void beforeClass() {
@@ -86,14 +84,12 @@ public class Topic_04_Xpath_Css_Register {
 	  //Verify Cofirm email erro message
 	  Assert.assertTrue(driver.findElement(By.xpath("//*[@id='txtCEmail-error']")).isDisplayed());
 	  
-	  
   }
   
   @Test
   public void TC_03_Register_with_incorrect_Cofirm_Email() {
 	  
 	  driver.navigate().refresh();
-	  
 	  
 	  //Input name
 	  driver.findElement(By.xpath("//*[@id='txtFirstname']")).sendKeys("Pika ahihi");
