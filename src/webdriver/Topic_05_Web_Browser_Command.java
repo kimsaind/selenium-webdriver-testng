@@ -99,21 +99,9 @@ public class Topic_05_Web_Browser_Command {
 		//Lấy kích thước hiên tại của của browser
 		driver.manage().window().getSize();
 		//driver.manage().window().getSize(new Dimension(1920,1080));
-		
-		
-		
-	}
-	@Test
-	public void TC_02_() {
-		
-	}
 
-	@Test
-	public void TC_03_() {
-		
 	}
-
-
+	
 	@AfterClass
 	public void afterClass() {
 		driver.quit();
