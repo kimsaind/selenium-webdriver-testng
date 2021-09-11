@@ -30,9 +30,8 @@ public class Topic_06_Web_Element_Exercise {
 	By sider2 = By.xpath("//input[@id='slider-2']");
 
 	By javaCheckbox = By.xpath("//input[@id='java']");
-	
-	
-	//Testcase 4
+
+	// Testcase 4
 	By email4Textbox = By.xpath("//input[@id='email']");
 	By newusernameTextbox = By.xpath("//input[@id='new_username']");
 	By password4Textbox = By.xpath("//input[@id='new_password']");
@@ -43,18 +42,6 @@ public class Topic_06_Web_Element_Exercise {
 	By characters8Text = By.xpath("//li[@class='8-char completed']");
 	By loginButton = By.xpath("//button[@id='create-account']");
 	By marketingnewsletterCheckbox = By.xpath("//input[@id='marketing_newsletter']");
-			
-	
-	
-	
-	
-	
-	
-	//li[@class='number-char completed']
-	
-	//li[@class='special-char completed']
-	
-	
 
 	@BeforeClass
 	public void beforeClass() {
@@ -158,72 +145,66 @@ public class Topic_06_Web_Element_Exercise {
 
 	}
 
-	//@Test
+	// @Test
 	public void TC_03_isSelected() {
 		driver.get("https://automationfc.github.io/basic-form/index.html");
 
 		senkeytoClick(ageUnder18Radio);
 		senkeytoClick(developmentCheckbox);
 		senkeytoClick(javaCheckbox);
-		
+
 		Assert.assertTrue(isElementSelected(ageUnder18Radio));
 		Assert.assertTrue(isElementSelected(developmentCheckbox));
 		Assert.assertTrue(isElementSelected(javaCheckbox));
-		
-		//bỏ chọn 
+
+		// bỏ chọn
 		senkeytoClick(javaCheckbox);
 		Assert.assertFalse(isElementSelected(javaCheckbox));
 	}
 
 	@Test
-	public void TC_04_Register() {
+	public void TC_04_Register_Validate() {
 		driver.get("https://login.mailchimp.com/signup/");
-		
+
 		senkeytoElement(email4Textbox, "pika@gmail.com");
 		senkeytoElement(newusernameTextbox, "pika");
-		
-		//Lower case
+
+		// Lower case
 		senkeytoElement(password4Textbox, "pikaa");
-	    Assert.assertTrue(isElementDisplayed(onelowercaseText));
-	    Assert.assertFalse(isElementEnabled(loginButton));
-		
-	    //Upper case
-	    driver.findElement(password4Textbox).clear();
+		Assert.assertTrue(isElementDisplayed(onelowercaseText));
+		Assert.assertFalse(isElementEnabled(loginButton));
+
+		// Upper case
+		driver.findElement(password4Textbox).clear();
 		senkeytoElement(password4Textbox, "Pikaaa");
 		Assert.assertFalse(isElementEnabled(loginButton));
-		
-		//Number
-	    driver.findElement(password4Textbox).clear();
+
+		// Number
+		driver.findElement(password4Textbox).clear();
 		senkeytoElement(password4Textbox, "1aaaaaaaa");
 		Assert.assertFalse(isElementEnabled(loginButton));
-		
-		//Special
+
+		// Special
 		driver.findElement(password4Textbox).clear();
 		senkeytoElement(password4Textbox, "123@aa");
 		Assert.assertFalse(isElementEnabled(loginButton));
-		
-		//>=8 chars
+
+		// >=8 chars
 		driver.findElement(password4Textbox).clear();
 		senkeytoElement(password4Textbox, "1234abc");
 		Assert.assertFalse(isElementEnabled(loginButton));
-	     
-		//Full valid data
+
+		// Full valid data
 		driver.findElement(password4Textbox).clear();
 		senkeytoElement(password4Textbox, "1234@Abcd");
 		Assert.assertTrue(isElementEnabled(loginButton));
-		
-		//Checkbox
+
+		// Checkbox
 		senkeytoClick(marketingnewsletterCheckbox);
 		Assert.assertTrue(isElementSelected(marketingnewsletterCheckbox));
-		
-	
-		
-		
-		
-		
-		
-		
+
 	}
+
 	@AfterClass
 	public void afterClass() {
 		driver.quit();
