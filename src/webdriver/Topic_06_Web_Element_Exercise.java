@@ -163,9 +163,10 @@ public class Topic_06_Web_Element_Exercise {
 	}
 
 	@Test
-	public void TC_04_Register_Validate() {
+	public void TC_04_Register_validate() {
 		driver.get("https://login.mailchimp.com/signup/");
 
+		//Input mail & name
 		senkeytoElement(email4Textbox, "pika@gmail.com");
 		senkeytoElement(newusernameTextbox, "pika");
 
