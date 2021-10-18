@@ -1,36 +1,34 @@
 package webdriver;
 
-import java.time.Duration;
-import java.util.Date;
 import java.util.Random;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.google.common.base.Function;
-
-public class Topic_00_Template {
+public class Topic_17_Wait_Part_III_Static_Wait {
 
 	String projectPath = System.getProperty("user.dir");
+	
 
 	WebDriver driver;
 	JavascriptExecutor jsExecutor;
 	Actions action;
 	WebDriverWait explicitWait;
-
+	
+	By confirmEmailTextbox = By.xpath("//input[@name='reg_email_confirmation__']");
+	By startButton = By.cssSelector("#start>button");
+	By loadingIcon = By.cssSelector(".example #loading");
+	By helloWorldText = By.cssSelector("#finish>h4");
+	
 	@BeforeClass
 	public void beforeClass() {
 
@@ -42,133 +40,57 @@ public class Topic_00_Template {
 		// Chrome
 		System.setProperty("webdriver.chrome.driver", projectPath + "/browserDrivers/chromedriver");
 		driver = new ChromeDriver();
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		//driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		driver.manage().window().maximize();
+		
+		jsExecutor = (JavascriptExecutor) driver;
+		//explicitWait = new WebDriverWait(driver, 15);
+		action = new Actions(driver);
+	
+	
+	}
 
+
+	@Test
+	public void TC_01_Static_Wait_Less_Than() {
+	
+		driver.get("https://automationfc.github.io/dynamic-loading/");
+		clickElement(startButton);
+		
+		sleepInSecond(3);
+		
+		Assert.assertTrue(driver.findElement(helloWorldText).isDisplayed());
+		Assert.assertEquals(driver.findElement(helloWorldText).getText(), "Hello World!");
 	}
 
 	@Test
-	public void TC_01_() {
-
-		driver.get("");
-
+	public void TC_02_Static_Wait_Equal() {
+		
+		driver.get("https://automationfc.github.io/dynamic-loading/");
+		clickElement(startButton);
+		
+		sleepInSecond(5);
+		
+		Assert.assertTrue(driver.findElement(helloWorldText).isDisplayed());
+		Assert.assertEquals(driver.findElement(helloWorldText).getText(), "Hello World!");
 	}
 
 	@Test
-	public void TC_02_() {
-
+	public void TC_03_Static_Wait_Greater_Than() {
+	
+		driver.get("https://automationfc.github.io/dynamic-loading/");
+		clickElement(startButton);
+		
+		sleepInSecond(10);
+		
+		Assert.assertTrue(driver.findElement(helloWorldText).isDisplayed());
+		Assert.assertEquals(driver.findElement(helloWorldText).getText(), "Hello World!");
 	}
-
-	@Test
-	public void TC_03_() {
-
-	}
+	
 
 	@AfterClass
 	public void afterClass() {
 		driver.quit();
-	}
-	
-	public boolean isJQueryLoadedSuccess(WebDriver driver) {
-		ExpectedCondition<Boolean> jQueryLoad = new ExpectedCondition<Boolean>() {
-			@Override
-			public Boolean apply(WebDriver driver) {
-				return (Boolean) jsExecutor.executeScript("return (window.jQuery != null) && (jQuery.active === 0);");
-			}
-		};
-		return explicitWait.until(jQueryLoad);
-	}
-	
-	public boolean isJQueryAndAjaxIconLoadedSuccess(WebDriver driver) {
-		explicitWait = new WebDriverWait(driver, 15);
-		ExpectedCondition<Boolean> jQueryLoad = new ExpectedCondition<Boolean>() {
-			@Override
-			public Boolean apply(WebDriver driver) {
-				try {
-					return ((Long) jsExecutor.executeScript("return jQuery.active") == 0);
-				} catch (Exception e) {
-					return true;
-				}
-			}
-		};
-		ExpectedCondition<Boolean> ajaxIconLoading = new ExpectedCondition<Boolean>() {
-			@Override
-			public Boolean apply(WebDriver driver) {
-				return jsExecutor.executeScript("return $('.raDiv').is('visible')").toString().equals("false");
-			}
-		};
-
-		return explicitWait.until(jQueryLoad) && explicitWait.until(ajaxIconLoading);
-		
-	}
-	public WebElement getWebElement(By locator) {
-		FluentWait<WebDriver> wait = new FluentWait<WebDriver>(driver)
-				.withTimeout(Duration.ofSeconds(15))
-				.pollingEvery(Duration.ofSeconds(1))
-				.ignoring(NoSuchElementException.class);
-		WebElement element = wait.until(new Function<WebDriver, WebElement>() {
-			public WebElement apply(WebDriver driver) {
-				return driver.findElement(locator);
-			}
-		});
-		return element;
-	}
-	public void waitForElementAndClick(By locator) {
-		/*
-		 * FluentWait<WebDriver> wait = new FluentWait<WebDriver>(driver)
-		 * .withTimeout(Duration.ofSeconds(15)) .pollingEvery(Duration.ofSeconds(1))
-		 * .ignoring(NoSuchElementException.class); WebElement element = wait.until(new
-		 * Function<WebDriver, WebElement>() { public WebElement apply(WebDriver driver)
-		 * { return driver.findElement(locator); } });
-		 */
-		getWebElement(locator).click();
-	}
-	
-	public boolean waitForElementAndDisplayed(By locator) {
-		WebElement element = getWebElement(locator);
-		FluentWait<WebElement> wait = new FluentWait<WebElement>(element)
-				.withTimeout(Duration.ofSeconds(15))
-				.pollingEvery(Duration.ofSeconds(1))
-				.ignoring(NoSuchElementException.class);
-		boolean isDisplayed = wait.until(new Function<WebElement, Boolean>() {
-			public Boolean apply(WebElement element) {
-				boolean flag = element.isDisplayed();
-				return flag;
-			}
-		});
-		return isDisplayed;
-	}
-	
-	public boolean isJQueryAndPageLoadedSuccess(WebDriver driver) {
-		explicitWait = new WebDriverWait(driver, 15);
-		ExpectedCondition<Boolean> jQueryLoad = new ExpectedCondition<Boolean>() {
-			@Override
-			public Boolean apply(WebDriver driver) {
-				try {
-					return ((Long) jsExecutor.executeScript("return jQuery.active") == 0);
-				} catch (Exception e) {
-					return true;
-				}
-			}
-		};
-		ExpectedCondition<Boolean> jsLoad = new ExpectedCondition<Boolean>() {
-			@Override
-			public Boolean apply(WebDriver driver) {
-				return jsExecutor.executeScript("return document.readyState").toString().equals("complete");
-			}
-		};
-
-		return explicitWait.until(jQueryLoad) && explicitWait.until(jsLoad);
-	}
-	
-	public void switchToWindowById(String parentId) {
-		Set<String> allWindowIds = driver.getWindowHandles();
-		for (String windowId : allWindowIds) {
-			if (!windowId.equals(parentId)) {
-				driver.switchTo().window(windowId);
-				break;
-			}
-		}
 	}
 
 	public Object executeForBrowser(String javaScript) {
@@ -234,6 +156,7 @@ public class Topic_00_Template {
 		return driver.findElement(By.xpath(locator));
 	}
 
+
 	public boolean isElementDisplayed(By by) {
 		if (driver.findElement(by).isDisplayed()) {
 			System.out.println(by + " is displayed");
@@ -276,31 +199,30 @@ public class Topic_00_Template {
 	public void clickByJs(By by) {
 		jsExecutor.executeScript("arguments[0].click();", driver.findElement(by));
 	}
-
+	
 	public void removeAttributeByJs(By by) {
 		jsExecutor.executeScript("arguments[0].removeAttribute('disabled')", driver.findElement(by));
 	}
-
+	
 	public void checkToCheckboxOrRadioButton(By by) {
 		WebElement checkbox = driver.findElement(by);
-		if (!checkbox.isSelected()) {
+		if(!checkbox.isSelected()) {
 			checkbox.click();
 		}
 	}
-
+	
 	public void uncheckToCheckbox(By by) {
 		WebElement checkbox = driver.findElement(by);
-		if (checkbox.isSelected()) {
+		if(checkbox.isSelected()) {
 			checkbox.click();
 		}
 	}
-
+	
 	public void accessSplitandJoinUrl(String url, String username, String password) {
 		String[] hrefUrl = url.split("//");
 		url = hrefUrl[0] + "//" + username + ":" + password + "@" + hrefUrl[1];
 		driver.get(url);
 	}
-
 	public String generateEmail() {
 		Random rand = new Random();
 		return rand.nextInt(9999) + "@mail.com";
@@ -313,9 +235,5 @@ public class Topic_00_Template {
 			e.printStackTrace();
 		}
 	}
-	public String getDateTimeSecondNow() {
-		Date date = new Date();
-		return date.toString();
-	}
-
+	
 }

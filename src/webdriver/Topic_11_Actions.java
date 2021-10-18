@@ -1,5 +1,8 @@
 package webdriver;
 
+import java.awt.AWTException;
+import java.awt.Robot;
+import java.awt.event.InputEvent;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -10,8 +13,10 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -38,13 +43,14 @@ public class Topic_11_Actions {
 	public void beforeClass() {
 
 		// Firefox
-		//System.setProperty("webdriver.gecko.driver", projectPath + "/browserDrivers/geckodriver");
-		//driver = new FirefoxDriver();
+		// System.setProperty("webdriver.gecko.driver", projectPath +
+		// "/browserDrivers/geckodriver");
+		// driver = new FirefoxDriver();
 
 		// Chrome
 		System.setProperty("webdriver.chrome.driver", projectPath + "/browserDrivers/chromedriver");
 		driver = new ChromeDriver();
-		
+
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 
 		action = new Actions(driver);
@@ -59,10 +65,9 @@ public class Topic_11_Actions {
 
 		// driver.manage().window().maximize();
 
-		//System.out.println("Test: " + jsHelperPath);
+		// System.out.println("Test: " + jsHelperPath);
 	}
 
-	// @Test
 	public void TC_01_Hover_Textbox() {
 
 		driver.get("https://automationfc.github.io/jquery-tooltip/");
@@ -75,7 +80,6 @@ public class Topic_11_Actions {
 
 	}
 
-	// @Test
 	public void TC_02_Hover_Menu() {
 
 		driver.get("https://www.myntra.com/");
@@ -91,7 +95,6 @@ public class Topic_11_Actions {
 
 	}
 
-	// @Test
 	public void TC_03_Hover_Menu_Fahasa() {
 
 		driver.get("https://www.fahasa.com/?attempt=1");
@@ -113,7 +116,6 @@ public class Topic_11_Actions {
 
 	}
 
-	// @Test
 	public void TC_04_Click_And_Hold_Select_Multiple_Item() {
 		driver.get("https://automationfc.github.io/jquery-selectable/");
 
@@ -130,7 +132,6 @@ public class Topic_11_Actions {
 
 	}
 
-	// @Test
 	public void TC_05_Click_and_Hold_Random() {
 		driver.get("https://automationfc.github.io/jquery-selectable/");
 
@@ -151,7 +152,6 @@ public class Topic_11_Actions {
 
 	}
 
-	// @Test
 	public void TC_06_Double_Click() {
 		driver.get("https://automationfc.github.io/basic-form/index.html");
 
@@ -164,7 +164,6 @@ public class Topic_11_Actions {
 
 	}
 
-	//@Test
 	public void TC_07_Right_Click() {
 		driver.get("http://swisnl.github.io/jQuery-contextMenu/demo.html");
 
@@ -185,31 +184,28 @@ public class Topic_11_Actions {
 
 		driver.switchTo().alert().accept();
 	}
-	
-	//@Test
+
 	public void TC_08_Drag_And_Drop_HTML4() {
-		
+
 		driver.get("https://automationfc.github.io/kendo-drag-drop/");
-		
+
 		WebElement smallCircle = driver.findElement(By.xpath("//div[@id='draggable']"));
 		WebElement bigCircle = driver.findElement(By.xpath("//div[@id='droptarget']"));
-		
+
 		action.dragAndDrop(smallCircle, bigCircle).perform();
-		Assert.assertEquals(bigCircle.getText(),"You did great!");
-		
-		
-		//Mã màu RGB 
+		Assert.assertEquals(bigCircle.getText(), "You did great!");
+
+		// Mã màu RGB
 		System.out.println(bigCircle.getCssValue("background-color"));
-		
+
 		// RGB sang màu HEX
 		System.out.println(Color.fromString(bigCircle.getCssValue("background-color")).asHex());
-		
-		//Verify mã màu
+
+		// Verify mã màu
 		Assert.assertEquals(Color.fromString(bigCircle.getCssValue("background-color")).asHex(), "#03a9f4");
 	}
 
-	@Test
-	public void TC_09_Drag_And_Drop_HTML5() throws IOException {
+	public void TC_09_Drag_And_Drop_HTML5_Css() throws IOException {
 
 		driver.get("https://automationfc.github.io/drag-drop-html5/");
 
@@ -220,10 +216,12 @@ public class Topic_11_Actions {
 		// javascriptExecutor.executeScript(jqueryscript);
 		String sourceCss = "#column-a";
 		String targetCss = "#column-b";
-		jsHelperFileContent = jsHelperFileContent + "$(\"" + sourceCss + "\").simulateDragDrop({ dropTarget: \"" + targetCss + "\"});";
-		
+		jsHelperFileContent = jsHelperFileContent + "$(\"" + sourceCss + "\").simulateDragDrop({ dropTarget: \""
+				+ targetCss + "\"});";
+
 		// A to B
-		//jsHelperFileContent = jsHelperFileContent + "$('#column-a').simulateDragDrop({ dropTarget: '#column-b'});";
+		// jsHelperFileContent = jsHelperFileContent +
+		// "$('#column-a').simulateDragDrop({ dropTarget: '#column-b'});";
 		jsExecutor.executeScript(jsHelperFileContent);
 		sleepInSecond(3);
 		Assert.assertTrue(isElementDisplayed(By.xpath("//div[@id='column-a']/header[text()='B']")));
@@ -235,9 +233,19 @@ public class Topic_11_Actions {
 		Assert.assertTrue(isElementDisplayed(By.xpath("//div[@id='column-b']/header[text()='A']")));
 
 	}
-	
-	
-	
+
+	@Test
+	public void TC_09_Drag_And_Drop_HTML5_Xpath() throws AWTException {
+
+		driver.get("https://automationfc.github.io/drag-drop-html5/");
+		dragAndDropHtml5Xpath("//div[@id='column-a']", "//div[@id='column-b']");
+		sleepInSecond(5);
+
+		Assert.assertTrue(isElementDisplayed(By.xpath("//div[@id='column-a']/header[text()='B']")));
+		Assert.assertTrue(isElementDisplayed(By.xpath("//div[@id='column-b']/header[text()='A']")));
+
+	}
+
 	public String getContentFile(String filePath) throws IOException {
 		Charset cs = Charset.forName("UTF-8");
 		FileInputStream stream = new FileInputStream(filePath);
@@ -263,6 +271,7 @@ public class Topic_11_Actions {
 		}
 
 	}
+
 	public boolean isElementDisplayed(By by) {
 		WebElement element = driver.findElement(by);
 		if (element.isDisplayed()) {
@@ -274,6 +283,54 @@ public class Topic_11_Actions {
 		}
 	}
 
+	public void dragAndDropHtml5Xpath(String sourceLocator, String targetLocator) throws AWTException {
+
+		WebElement source = driver.findElement(By.xpath(sourceLocator));
+		WebElement target = driver.findElement(By.xpath(targetLocator));
+
+		// Setup robot
+		Robot robot = new Robot();
+		robot.setAutoDelay(500);
+
+		// Get size of elements
+		Dimension sourceSize = source.getSize();
+		Dimension targetSize = target.getSize();
+
+		// Get center distance
+		int xCentreSource = sourceSize.width / 2;
+		int yCentreSource = sourceSize.height / 2;
+		int xCentreTarget = targetSize.width / 2;
+		int yCentreTarget = targetSize.height / 2;
+
+		Point sourceLocation = source.getLocation();
+		Point targetLocation = target.getLocation();
+		System.out.println(sourceLocation.toString());
+		System.out.println(targetLocation.toString());
+
+		// Make Mouse coordinate center of element
+		sourceLocation.x += 20 + xCentreSource;
+		sourceLocation.y += 110 + yCentreSource;
+		targetLocation.x += 20 + xCentreTarget;
+		targetLocation.y += 110 + yCentreTarget;
+
+		System.out.println(sourceLocation.toString());
+		System.out.println(targetLocation.toString());
+
+		// Move mouse to drag from location
+		robot.mouseMove(sourceLocation.x, sourceLocation.y);
+
+		// Click and drag
+		robot.mousePress(InputEvent.BUTTON1_MASK);
+		robot.mousePress(InputEvent.BUTTON1_MASK);
+		robot.mouseMove(((sourceLocation.x - targetLocation.x) / 2) + targetLocation.x,
+				((sourceLocation.y - targetLocation.y) / 2) + targetLocation.y);
+
+		// Move to final position
+		robot.mouseMove(targetLocation.x, targetLocation.y);
+
+		// Drop
+		robot.mouseRelease(InputEvent.BUTTON1_MASK);
+	}
 
 	@AfterClass
 	public void afterClass() {

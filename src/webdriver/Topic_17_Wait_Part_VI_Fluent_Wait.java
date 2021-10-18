@@ -4,7 +4,6 @@ import java.time.Duration;
 import java.util.Date;
 import java.util.Random;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -16,13 +15,14 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Function;
 
-public class Topic_00_Template {
+public class Topic_17_Wait_Part_VI_Fluent_Wait {
 
 	String projectPath = System.getProperty("user.dir");
 
@@ -42,25 +42,47 @@ public class Topic_00_Template {
 		// Chrome
 		System.setProperty("webdriver.chrome.driver", projectPath + "/browserDrivers/chromedriver");
 		driver = new ChromeDriver();
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-		driver.manage().window().maximize();
-
+		jsExecutor = (JavascriptExecutor) driver;
+		action = new Actions(driver);
+		explicitWait = new WebDriverWait(driver, 15);
 	}
 
 	@Test
-	public void TC_01_() {
-
-		driver.get("");
-
+	public void TC_01_Fluent_Wait() {
+		driver.get("https://automationfc.github.io/fluent-wait/");
+		Assert.assertTrue(waitForElementAndDisplayed(By.cssSelector("#javascript_countdown_time")));
 	}
 
 	@Test
-	public void TC_02_() {
-
+	public void TC_02_Fluent_Wait() {
+		driver.get("https://automationfc.github.io/dynamic-loading/");
+		waitForElementAndClick(By.cssSelector("#start>button"));
+		Assert.assertTrue(waitForElementAndDisplayed(By.xpath("//div[@id='finish']/h4[text()='Hello World!']")));
 	}
 
 	@Test
-	public void TC_03_() {
+	public void TC_03_Ajax_Loading() {
+		driver.get("https://opensource-demo.orangehrmlive.com");
+		sendKeysToElement(By.id("txtUsername"), "Admin");
+		sendKeysToElement(By.id("txtPassword"), "admin123");
+		clickElement(By.id("btnLogin"));
+		Assert.assertTrue(isJQueryLoadedSuccess(driver));
+
+		//3 months isDisplayed
+		Assert.assertTrue(
+				driver.findElement(By.xpath("//tr[@class='total']//span[text()='3 month(s)']")).isDisplayed());
+
+		//Click PIM
+		clickElement(By.cssSelector("#menu_pim_viewPimModule"));
+
+		//Search Employee
+		sendKeysToElement(By.id("empsearch_employee_name_empName"), "Peter Mac");
+		clickElement(By.cssSelector("input#searchBtn"));
+
+		//Employee Name is displayed
+		Assert.assertTrue(driver.findElement(By.xpath(
+				"//a[text()='First (& Middle) Name']/ancestor::thead/following-sibling::tbody//a[text()='Peter Mac']"))
+				.isDisplayed());
 
 	}
 
@@ -68,7 +90,7 @@ public class Topic_00_Template {
 	public void afterClass() {
 		driver.quit();
 	}
-	
+
 	public boolean isJQueryLoadedSuccess(WebDriver driver) {
 		ExpectedCondition<Boolean> jQueryLoad = new ExpectedCondition<Boolean>() {
 			@Override
@@ -78,7 +100,7 @@ public class Topic_00_Template {
 		};
 		return explicitWait.until(jQueryLoad);
 	}
-	
+
 	public boolean isJQueryAndAjaxIconLoadedSuccess(WebDriver driver) {
 		explicitWait = new WebDriverWait(driver, 15);
 		ExpectedCondition<Boolean> jQueryLoad = new ExpectedCondition<Boolean>() {
@@ -99,46 +121,8 @@ public class Topic_00_Template {
 		};
 
 		return explicitWait.until(jQueryLoad) && explicitWait.until(ajaxIconLoading);
-		
 	}
-	public WebElement getWebElement(By locator) {
-		FluentWait<WebDriver> wait = new FluentWait<WebDriver>(driver)
-				.withTimeout(Duration.ofSeconds(15))
-				.pollingEvery(Duration.ofSeconds(1))
-				.ignoring(NoSuchElementException.class);
-		WebElement element = wait.until(new Function<WebDriver, WebElement>() {
-			public WebElement apply(WebDriver driver) {
-				return driver.findElement(locator);
-			}
-		});
-		return element;
-	}
-	public void waitForElementAndClick(By locator) {
-		/*
-		 * FluentWait<WebDriver> wait = new FluentWait<WebDriver>(driver)
-		 * .withTimeout(Duration.ofSeconds(15)) .pollingEvery(Duration.ofSeconds(1))
-		 * .ignoring(NoSuchElementException.class); WebElement element = wait.until(new
-		 * Function<WebDriver, WebElement>() { public WebElement apply(WebDriver driver)
-		 * { return driver.findElement(locator); } });
-		 */
-		getWebElement(locator).click();
-	}
-	
-	public boolean waitForElementAndDisplayed(By locator) {
-		WebElement element = getWebElement(locator);
-		FluentWait<WebElement> wait = new FluentWait<WebElement>(element)
-				.withTimeout(Duration.ofSeconds(15))
-				.pollingEvery(Duration.ofSeconds(1))
-				.ignoring(NoSuchElementException.class);
-		boolean isDisplayed = wait.until(new Function<WebElement, Boolean>() {
-			public Boolean apply(WebElement element) {
-				boolean flag = element.isDisplayed();
-				return flag;
-			}
-		});
-		return isDisplayed;
-	}
-	
+
 	public boolean isJQueryAndPageLoadedSuccess(WebDriver driver) {
 		explicitWait = new WebDriverWait(driver, 15);
 		ExpectedCondition<Boolean> jQueryLoad = new ExpectedCondition<Boolean>() {
@@ -160,7 +144,7 @@ public class Topic_00_Template {
 
 		return explicitWait.until(jQueryLoad) && explicitWait.until(jsLoad);
 	}
-	
+
 	public void switchToWindowById(String parentId) {
 		Set<String> allWindowIds = driver.getWindowHandles();
 		for (String windowId : allWindowIds) {
@@ -169,6 +153,41 @@ public class Topic_00_Template {
 				break;
 			}
 		}
+	}
+
+	public WebElement getWebElement(By locator) {
+		FluentWait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(Duration.ofSeconds(15))
+				.pollingEvery(Duration.ofSeconds(1)).ignoring(NoSuchElementException.class);
+		WebElement element = wait.until(new Function<WebDriver, WebElement>() {
+			public WebElement apply(WebDriver driver) {
+				return driver.findElement(locator);
+			}
+		});
+		return element;
+	}
+
+	public void waitForElementAndClick(By locator) {
+		/*
+		 * FluentWait<WebDriver> wait = new FluentWait<WebDriver>(driver)
+		 * .withTimeout(Duration.ofSeconds(15)) .pollingEvery(Duration.ofSeconds(1))
+		 * .ignoring(NoSuchElementException.class); WebElement element = wait.until(new
+		 * Function<WebDriver, WebElement>() { public WebElement apply(WebDriver driver)
+		 * { return driver.findElement(locator); } });
+		 */
+		getWebElement(locator).click();
+	}
+
+	public boolean waitForElementAndDisplayed(By locator) {
+		WebElement element = getWebElement(locator);
+		FluentWait<WebElement> wait = new FluentWait<WebElement>(element).withTimeout(Duration.ofSeconds(15))
+				.pollingEvery(Duration.ofSeconds(1)).ignoring(NoSuchElementException.class);
+		boolean isDisplayed = wait.until(new Function<WebElement, Boolean>() {
+			public Boolean apply(WebElement element) {
+				boolean flag = element.isDisplayed();
+				return flag;
+			}
+		});
+		return isDisplayed;
 	}
 
 	public Object executeForBrowser(String javaScript) {
@@ -313,6 +332,7 @@ public class Topic_00_Template {
 			e.printStackTrace();
 		}
 	}
+
 	public String getDateTimeSecondNow() {
 		Date date = new Date();
 		return date.toString();

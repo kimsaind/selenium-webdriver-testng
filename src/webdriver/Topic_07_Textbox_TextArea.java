@@ -96,7 +96,6 @@ public class Topic_07_Textbox_TextArea {
 
 	}
 
-	@Test
 	public void TC_02_Login() {
 
 		driver.get(loginPageUrl);
@@ -109,7 +108,6 @@ public class Topic_07_Textbox_TextArea {
 
 	}
 
-	@Test
 	public void TC_03_New_Customer() {
 
 		driver.findElement(By.xpath("//a[text()='New Customer']")).click();
@@ -142,7 +140,6 @@ public class Topic_07_Textbox_TextArea {
 		
 	}
 
-	@Test
 	public void TC_04_Edit_Customer() throws Exception {
 		
 		driver.findElement(By.xpath("//a[text()='Edit Customer']")).click();
