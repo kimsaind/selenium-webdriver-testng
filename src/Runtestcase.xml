@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="Tiki" parallel="tests" thread-count="2"> <!-- Ten du an -->
+
+ <!---<groups>
+  	<run>
+  	<include name="regression"/>  
+  		 <exclude name="web"/> 
+  		 <include name="web"/>
+  	</run>
+  </groups> -->
+ 
+<parameter name="url" value="https://demo.nopcommerce.com/"/>
+  <test name="Run on FIREFOX"> <!-- Run cho browser nao -->
+  <parameter name="browser" value="firefox"/>
+     <classes> 
+     <!-- <class name="testng.Topic_01_Annotations"/> -->
+      	<class name="testng.Topic_05_Parameter"/>
+    </classes> <!--Most used -->
+    
+     <!--<packages>
+    	<package name="integrationTest" />
+    	<package name="mobileTest" />
+    	<package name="webTest" />
+    </packages>-->
+  </test> 
+  
+  <test name="Run on CHROME"> <!-- Run cho browser nao -->
+  <parameter name="browser" value="chrome"/>
+   <classes> 
+   		<class name="testng.Topic_05_Parameter"/>
+    </classes>
+  </test> 
+  
+ 
+  
+ </suite> 

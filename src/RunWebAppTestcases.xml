@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="Tiki" parallel="tests" thread-count="2"> <!-- Ten du an -->
+
+	<listeners>
+		<listener class-name="listenerConfig.TestListener"/>
+	</listeners>
+	<test name="Run on FIREFOX">
+		<parameter name="browser" value="firefox" />
+		<classes>
+			<class name="webTest.Topic_01_Web" />
+			<class name="testng.Topic_07_DependOnTest" />
+		</classes>
+	</test>
+  
+ 
+  
+ </suite> 
