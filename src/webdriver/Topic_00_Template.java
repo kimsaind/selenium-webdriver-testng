@@ -4,14 +4,13 @@ import java.time.Duration;
 import java.util.Date;
 import java.util.Random;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.FluentWait;
@@ -24,7 +23,7 @@ import com.google.common.base.Function;
 
 public class Topic_00_Template {
 
-	String projectPath = System.getProperty("user.dir");
+	String projectPath = System.getProperty("user.dir"); // lấy đường dẫn trên máy
 
 	WebDriver driver;
 	JavascriptExecutor jsExecutor;
@@ -35,23 +34,37 @@ public class Topic_00_Template {
 	public void beforeClass() {
 
 		// Firefox
-		// System.setProperty("webdriver.gecko.driver", projectPath +
-		// "/browserDrivers/geckodriver");
-		// driver = new FirefoxDriver();
+		System.setProperty("webdriver.gecko.driver", projectPath + "/browserDrivers/geckodriver");
+		driver = new FirefoxDriver();
 
 		// Chrome
-		System.setProperty("webdriver.chrome.driver", projectPath + "/browserDrivers/chromedriver");
-		driver = new ChromeDriver();
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-		driver.manage().window().maximize();
-
+		//System.setProperty("webdriver.chrome.driver", projectPath + "/browserDrivers/chromedriver");
+		
+		//driver = new ChromeDriver(); // khởi tạo chrome
+		
+		/*WebDriver driver = new SafariDriver(); 
+		driver.navigate().to("http://www.google.com/");*/
+	
+		//driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		//driver.manage().window().maximize();
+		driver.get("https://www.google.com/");
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	@Test
 	public void TC_01_() {
 
-		driver.get("");
-
+		
 	}
 
 	@Test
